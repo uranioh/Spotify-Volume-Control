@@ -1,6 +1,6 @@
 package com.volumecontrol;
 
-import authorization.client_credentials.ClientCredentialsLogin;
+import authorization.authorization_code.AuthorizationData;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.requests.data.player.StartResumeUsersPlaybackRequest;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class Resume {
-    private static final SpotifyApi spotifyApi = ClientCredentialsLogin.getSpotifyApi();
+    private static final SpotifyApi spotifyApi = AuthorizationData.getSpotifyApi();
     private static final StartResumeUsersPlaybackRequest startResumeUsersPlaybackRequest = spotifyApi
             .startResumeUsersPlayback()
             .build();
@@ -42,9 +42,5 @@ public class Resume {
         } catch (CancellationException e) {
             System.out.println("Async operation cancelled.");
         }
-    }
-
-    public static void main(String[] args) {
-        startResumeUsersPlayback_Sync();
     }
 }

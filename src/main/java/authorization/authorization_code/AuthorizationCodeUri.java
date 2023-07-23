@@ -1,34 +1,42 @@
 package authorization.authorization_code;
 
 import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
+import java.awt.*;
+import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class AuthorizationCodeUri {
-    private static final String clientId = "zyuxhfo1c51b5hxjk09x2uhv5n0svgd6g";
-    private static final String clientSecret = "zudknyqbh3wunbhcvg9uyvo7uwzeu6nne";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("https://example.com/spotify-redirect");
+    private static final SpotifyApi spotifyApi = AuthorizationData.getSpotifyApi();
 
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRedirectUri(redirectUri)
-            .build();
     private static final AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-//          .state("x4xkmn9pu3j6ukrs8n")
-//          .scope("user-read-birthdate,user-read-email")
-//          .show_dialog(true)
+            .scope("user-read-playback-state user-read-currently-playing app-remote-control user-read-private user-read-email")
+            .show_dialog(true)
             .build();
 
     public static void authorizationCodeUri_Sync() {
         final URI uri = authorizationCodeUriRequest.execute();
 
-        System.out.println("URI: " + uri.toString());
+        Desktop desktop;
+        if (Desktop.isDesktopSupported()
+                && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void authorizationCodeUri_Async() {
@@ -46,10 +54,5 @@ public class AuthorizationCodeUri {
         } catch (CancellationException e) {
             System.out.println("Async operation cancelled.");
         }
-    }
-
-    public static void main(String[] args) {
-        authorizationCodeUri_Sync();
-        authorizationCodeUri_Async();
     }
 }

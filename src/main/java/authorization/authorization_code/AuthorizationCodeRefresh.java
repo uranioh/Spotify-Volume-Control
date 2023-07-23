@@ -12,8 +12,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class AuthorizationCodeRefresh {
-    private static final String clientId = "zyuxhfo1c51b5hxjk09x2uhv5n0svgd6g";
-    private static final String clientSecret = "zudknyqbh3wunbhcvg9uyvo7uwzeu6nne";
+    private static final String clientId = AuthorizationData.getClientId();
+    private static final String clientSecret = AuthorizationData.getClientSecret();
     private static final String refreshToken = "b0KuPuLw77Z0hQhCsK-GTHoEx_kethtn357V7iqwEpCTIsLgqbBC_vQBTGC6M5rINl0FrqHK-D3cbOsMOlfyVKuQPvpyGcLcxAoLOTpYXc28nVwB7iBq2oKj9G9lHkFOUKn";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
